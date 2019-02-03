@@ -1,0 +1,71 @@
+{
+  "env": {
+    "node": true,
+    "jest/globals": true
+  },
+  "extends": [
+    "strict",
+    "plugin:jest/recommended",
+    "plugin:prettier/recommended"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2018
+  },
+  "plugins": ["jest", "import"],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {
+        "alias": {
+          "~": "./src"
+        }
+      }
+    }
+  },
+  "rules": {
+    "callback-return": 0,
+    "camelcase": 0,
+    "comma-dangle": [2, "never"],
+    "complexity": 0,
+    "consistent-return": 0,
+    "default-case": 0,
+    "eol-last": 0,
+    "filenames/filenames": 0,
+    "func-names": 0,
+    "func-style": [
+      2,
+      "expression",
+      {
+        "allowArrowFunctions": true
+      }
+    ],
+    "generator-star-spacing": [2, "neither"],
+    "global-require": 0,
+    "id-blacklist": 0,
+    "id-length": 0,
+    "id-match": 0,
+    "linebreak-style": 0,
+    "max-len": 0,
+    "max-statements": 0,
+    "newline-after-var": 0,
+    "no-process-env": 0,
+    "no-console": 0,
+    "no-inline-comments": 0,
+    "no-invalid-this": 0,
+    "no-magic-numbers": 0,
+    "no-negated-condition": 0,
+    "no-nested-ternary": 0,
+    "no-sync": 0,
+    "no-undefined": 0,
+    "no-underscore-dangle": 0,
+    "no-use-before-define": 0,
+    "no-warning-comments": 0,
+    "object-shorthand": [2, "never"],
+    "prefer-reflect": 0,
+    "prettier/prettier": [2, { "singleQuote": true }],
+    "quote-props": [2, "as-needed"],
+    "sort-imports": 0,
+    "space-before-function-paren": 0,
+    "spaced-comment": 0,
+    "template-curly-spacing": 0
+  }
+}
