@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 const dbPassword = 'H8rm4n123';
 const db = mongoose.connect(
   `mongodb://osprey-test:${dbPassword}@ds221115.mlab.com:21115/osprey-test`,
+  { useCreateIndex: true, useNewUrlParser: true },
 );
 
 
