@@ -21,6 +21,7 @@ cameraRouter
     console.log(cameraOptions);
     const camera = new Camera(cameraOptions);
 
+    if (!req.timedout) {
       const resp = camera.save((err, camera) => {
         if (err) {
           res.status(500).send(`an error has occurred: ${err}`);
@@ -28,6 +29,7 @@ cameraRouter
         }
         res.status(201).send(camera);
       });
+    }
 
     console.log(resp);
   });

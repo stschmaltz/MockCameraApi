@@ -2,6 +2,9 @@ import express from 'express';
 import cameraRouter from './routes/camera-router';
 import mongoose from 'mongoose';
 import bodyParser from 'body-parser';
+import timeout from 'connect-timeout';
+
+require('dotenv').config({ path: '.env' });
 
 // TODO: probably remove this and put it in a config? maybe not since osprey needs to run it and it doesn't really matter.
 // TODO: Sort this out ^
@@ -11,6 +14,8 @@ const db = mongoose.connect(
   { useCreateIndex: true, useNewUrlParser: true },
 );
 
+// Timeout in ms from config. Default = 5000ms
+const timeoutTime = process.env.TIMEOUT_MS || 5000;
 
 const app = express();
 const port = process.env.PORT || 5656;
@@ -18,6 +23,16 @@ const port = process.env.PORT || 5656;
 app.listen(port, () => {
   console.log(`Server now listening at http://localhost:${port}`);
 });
+
+// Set up timeout
+function haltOnTimedout(req, res, next) {
+  if (!req.timedout) next();
+}
+
+app.use(timeout(timeoutTime));
+app.use(haltOnTimedout);
+
+// console.log(app.timeout);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
