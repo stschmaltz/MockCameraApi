@@ -13,8 +13,12 @@
   "author": "@stschmaltz Shane Schmaltz",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.18.3",
+    "connect-timeout": "^1.9.0",
+    "dotenv": "^6.2.0",
     "express": "^4.16.4",
-    "mongoose": "^5.4.9"
+    "mongoose": "^5.4.9",
+    "mongoose-paginate": "^5.0.3"
   },
   "devDependencies": {
     "babel-preset-stage-3": "^6.24.1",
@@ -26,10 +30,8 @@
     "eslint-config-prettier": "^4.0.0",
     "eslint-config-strict": "^14.0.1",
     "eslint-plugin-import": "^2.16.0",
-    "eslint-plugin-jest": "^22.2.2",
     "eslint-plugin-prettier": "^3.0.1",
     "eslint-watch": "^4.0.2",
-    "jest": "^24.0.0",
     "nodemon": "^1.18.9",
     "prettier": "^1.14.3"
   }
