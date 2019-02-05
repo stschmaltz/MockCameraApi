@@ -1,69 +1,55 @@
 import express from 'express';
 import Camera from '../models/camera-model';
-import { runInNewContext } from 'vm';
+import get from 'lodash.get';
+import {
+  getListOfCameras,
+  getCameraImageCount,
+  getCameraDataUsage,
+  getCameraById,
+  deployNewCamera,
+} from './operations/camera-operations';
+import { sendError } from './operations/common-operations';
 
 const cameraRouter = express.Router();
 cameraRouter
   .route('/')
   .get((req, res) => {
-    Camera.find({}, (err, cameras) => {
-      if (err) {
-        res.json(500, err);
+    console.log(req.query.aggregate);
+    const aggregate = get(req, 'query.aggregate');
+    if (aggregate) {
+      if (aggregate === 'image-count') {
+        getCameraImageCount(req, res);
         return;
       }
-      res.json(cameras);
-    });
+      if (aggregate === 'data-usage') {
+        getCameraDataUsage(req, res);
+        return;
+      }
+    }
+    getListOfCameras(req, res);
   })
   .post((req, res) => {
-    console.log(req.body);
-
     const cameraOptions = { ...req.body, _id: req.body.camera_id };
-    console.log(cameraOptions);
-    const camera = new Camera(cameraOptions);
 
     if (!req.timedout) {
-      const resp = camera.save((err, camera) => {
-        if (err) {
-          res.status(500).send(`an error has occurred: ${err}`);
-          return 'nay';
-        }
-        res.status(201).send(camera);
-      });
+      deployNewCamera(req, res, cameraOptions);
     }
-
-    console.log(resp);
   });
 
 cameraRouter.use('/:camera_id', (req, res, next) => {
-  console.log('I run first');
   next();
 });
 
 cameraRouter.route('/:camera_id').get((req, res) => {
-  console.log(req.params.camera_id);
-  console.log(req.query);
-  const queryParams = extractPaginationQueryParams(req.query);
-  console.log(queryParams);
-  Camera.findById(
-    req.params.camera_id,
-    { images: { $slice: [queryParams.offset, queryParams.pageSize] } },
-    (err, cameras) => {
-      // console.log(cameras);
-      console.log(err);
-      if (err) {
-        res.status(500).send(`An error has occurred: ${err}`);
-        return 'nay';
-      }
-      if (!req.timedOut && !res.headersSent) res.json(cameras);
-    },
-  );
+  const paginationParams = extractPaginationQueryParams(req.query);
+  const id = req.params.camera_id;
+  getCameraById(req, res, id, paginationParams);
 });
 
 const extractPaginationQueryParams = query => {
-  console.log('WE IN', query);
-  const maxPageSize = 10;
+  const maxPageSize = 10000;
   const { pageSize, pageCount } = query;
-  console.log(pageSize, pageCount);
+
   if (!pageSize || !pageCount) {
     return {
       pageSize: maxPageSize,
