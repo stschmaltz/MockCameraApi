@@ -20,7 +20,7 @@ export const getCameraImageCount = (req, res) => {
     ],
     (err, result) => {
       if (err) {
-        sendError(err);
+        sendError(res, err);
         return;
       }
       res.json(result);
@@ -41,7 +41,7 @@ export const getCameraDataUsage = (req, res) => {
     ],
     (err, result) => {
       if (err) {
-        sendError(err);
+        sendError(res, err);
         return;
       }
       res.json(result);
@@ -52,7 +52,7 @@ export const getCameraDataUsage = (req, res) => {
 export const getListOfCameras = (req, res) => {
   Camera.find({}, (err, cameras) => {
     if (err) {
-      sendError(err);
+      sendError(res, err);
       return;
     }
     res.json(cameras);
@@ -64,10 +64,10 @@ export const getListOfCameras = (req, res) => {
 export const getCameraById = (req, res, id, queryParams) =>
   Camera.findById(
     id,
-    { images: { $slice: [queryParams.offset, queryParams.pageSize] } },
+    { images: { $slice: [queryParams.offset, queryParams.pagesize] } },
     (err, cameras) => {
       if (err) {
-        sendError(err);
+        sendError(res, err);
         return;
       }
       if (!hasTimedOut(req) && !hasSentHeader(res)) res.json(cameras);

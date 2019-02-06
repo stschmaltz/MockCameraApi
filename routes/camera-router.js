@@ -1,5 +1,4 @@
 import express from 'express';
-import Camera from '../models/camera-model';
 import get from 'lodash.get';
 import {
   getListOfCameras,
@@ -8,7 +7,6 @@ import {
   getCameraById,
   deployNewCamera,
 } from './operations/camera-operations';
-import { sendError } from './operations/common-operations';
 
 const cameraRouter = express.Router();
 cameraRouter
@@ -48,18 +46,18 @@ cameraRouter.route('/:camera_id').get((req, res) => {
 
 const extractPaginationQueryParams = query => {
   const maxPageSize = 10000;
-  const { pageSize, pageCount } = query;
+  const { pagesize, pagecount } = query;
 
-  if (!pageSize || !pageCount) {
+  if (!pagesize || !pagecount) {
     return {
-      pageSize: maxPageSize,
+      pagesize: maxPageSize,
       offset: 0,
     };
   }
 
   return {
-    pageSize: parseInt(pageSize),
-    offset: pageCount * (pageSize || 0),
+    pagesize: parseInt(pagesize),
+    offset: pagecount * (pagesize || 0),
   };
 };
 export default cameraRouter;
