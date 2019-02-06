@@ -6,6 +6,7 @@ import {
   getCameraDataUsage,
   getCameraById,
   deployNewCamera,
+  getMostDataUsedImagesByCamera,
 } from './operations/camera-operations';
 
 const cameraRouter = express.Router();
@@ -39,9 +40,18 @@ cameraRouter.use('/:camera_id', (req, res, next) => {
 });
 
 cameraRouter.route('/:camera_id').get((req, res) => {
-  const paginationParams = extractPaginationQueryParams(req.query);
   const id = req.params.camera_id;
-  getCameraById(req, res, id, paginationParams);
+  const maxCount = 100;
+  const aggregate = get(req, 'query.aggregate');
+  const { pagesize, offset } = extractPaginationQueryParams(req.query);
+
+  if (aggregate === 'most-data') {
+    const count = get(req, 'query.count') || maxCount;
+    getMostDataUsedImagesByCamera(req, res, id, count);
+
+    return;
+  }
+  getCameraById(req, res, id, pagesize, offset);
 });
 
 const extractPaginationQueryParams = query => {

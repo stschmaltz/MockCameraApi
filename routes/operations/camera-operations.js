@@ -1,6 +1,33 @@
 import { sendError } from './common-operations';
 import Camera from '../../models/camera-model';
 
+export const getMostDataUsedImagesByCamera = (req, res, id, count) =>
+  Camera.aggregate(
+    [
+      {
+        $match: {
+          camera_id: parseInt(id),
+        },
+      },
+      { $unwind: '$images' },
+      {
+        $sort: {
+          'images.file_size': -1,
+        },
+      },
+      {
+        $limit: parseInt(count),
+      },
+    ],
+    (err, result) => {
+      if (err) {
+        sendError(res, err);
+        return;
+      }
+      res.json(result);
+    },
+  );
+
 export const getCameraImageCount = (req, res) => {
   Camera.aggregate(
     [
@@ -61,10 +88,10 @@ export const getListOfCameras = (req, res) => {
     .sort('camera_id');
 };
 
-export const getCameraById = (req, res, id, queryParams) =>
+export const getCameraById = (req, res, id, pagesize, offset) =>
   Camera.findById(
     id,
-    { images: { $slice: [queryParams.offset, queryParams.pagesize] } },
+    { images: { $slice: [offset, pagesize] } },
     (err, cameras) => {
       if (err) {
         sendError(res, err);
