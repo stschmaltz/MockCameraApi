@@ -40,6 +40,8 @@ It creates a new camera with an id and array of images.
 ### /camera/:id
 #### GET
 Basic get with no query parameters will return the camera with the matching id's images
+`example: GET https://camera-api.now.sh/camera/4`
+
 #### Pagination
 Query parameters of ?pagesize=#&pagecount=# will return camera with matching id's images paginated ... both are required or it will default to the first page with a pagesize of 10000. I wanted to also have a "next" link but I didn't have time to implement it.
 `example: GET https://camera-api.now.sh/camera/8?pagesize=100&pagecount=5`
@@ -50,8 +52,8 @@ Query parameter of ?aggregate=data-usage will return a list of cameras with thei
 Can also specify a count of how many images you want in that array. Top ten would be ?count=10. 
 `example: GET https://camera-api.now.sh/camera/9?aggregate=most-data&count=5`
 
-## Some Notes
-I couldn't get my tests to work since I couldn't figure out how to get the mocking working. I wrote an explanation in my test file for camera-router.test.js. I realize this is partially due to what I explain below and not having a simpler solution but I think I still managed to demonstrate my abilities in the way you're looking to test them... that's my hope at least.
+## Author's Notes
+I couldn't get my tests to work since I couldn't figure out how to get the mocking working. I wrote an explanation in my test file for camera-router.test.js. I did write stubs to show something. I realize this is partially due to what I explain below and not having a simpler solution but I think I still managed to demonstrate my abilities in the way you're looking to test them... that's my hope at least.
 
 The test didn't seem to be asking for an actual hook up to a database (it actually says specifically there won't be a real endpoint..), but I hooked it up to a hosted mongodb on mlabs.. Hopefully that's okay and I don't fail for not just using arrays like a sane person. My general thought process was that first, if I did a full end to end solution, I could re-use this as a portfolio piece regardless of the outcome (plus it seemed like a really good learning opportunity) and secondly because I thought it would make it a lot more fun/intersting to work on if I could actually build a working server. It definitely slowed me down to have to learn them as I go but I did learn a lot... and I think it's kind of cool that it actually works.
 
