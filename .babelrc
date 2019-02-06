@@ -1,4 +1,28 @@
 {
-  "presets": ["es2015-node5", "stage-3"],
-  "plugins": []
+  "env": {
+    "test": {
+      "retainLines": true
+    }
+  },
+  "plugins": [
+    "@babel/plugin-proposal-object-rest-spread",
+    [
+      "module-resolver",
+      {
+        "alias": {
+          "~": "./src"
+        }
+      }
+    ]
+  ],
+  "presets": [
+    [
+      "@babel/env",
+      {
+        "targets": {
+          "node": "8.10"
+        }
+      }
+    ]
+  ]
 }

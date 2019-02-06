@@ -1,32 +1,8 @@
 import { sendError } from './common-operations';
 import Camera from '../../models/camera-model';
 
-export const getMostDataUsedImagesByCamera = (req, res, id, count) =>
-  Camera.aggregate(
-    [
-      {
-        $match: {
-          camera_id: parseInt(id),
-        },
-      },
-      { $unwind: '$images' },
-      {
-        $sort: {
-          'images.file_size': -1,
-        },
-      },
-      {
-        $limit: parseInt(count),
-      },
-    ],
-    (err, result) => {
-      if (err) {
-        sendError(res, err);
-        return;
-      }
-      res.json(result);
-    },
-  );
+const hasTimedOut = req => req.timedOut;
+const hasSentHeader = res => res.headersSent;
 
 export const getCameraImageCount = (req, res) => {
   Camera.aggregate(
@@ -50,7 +26,7 @@ export const getCameraImageCount = (req, res) => {
         sendError(res, err);
         return;
       }
-      res.json(result);
+      if (!hasTimedOut(req) && !hasSentHeader(res)) res.json(result);
     },
   );
 };
@@ -71,7 +47,7 @@ export const getCameraDataUsage = (req, res) => {
         sendError(res, err);
         return;
       }
-      res.json(result);
+      if (!hasTimedOut(req) && !hasSentHeader(res)) res.json(result);
     },
   );
 };
@@ -88,7 +64,7 @@ export const getListOfCameras = (req, res) => {
     .sort('camera_id');
 };
 
-export const getCameraById = (req, res, id, pagesize, offset) =>
+export const getCameraById = (req, res, id, pagesize, offset) => {
   Camera.findById(
     id,
     { images: { $slice: [offset, pagesize] } },
@@ -100,9 +76,35 @@ export const getCameraById = (req, res, id, pagesize, offset) =>
       if (!hasTimedOut(req) && !hasSentHeader(res)) res.json(cameras);
     },
   );
+};
 
-const hasTimedOut = req => req.timedOut;
-const hasSentHeader = res => res.headersSent;
+export const getMostDataUsedImagesByCamera = (req, res, id, count) => {
+  Camera.aggregate(
+    [
+      {
+        $match: {
+          camera_id: parseInt(id),
+        },
+      },
+      { $unwind: '$images' },
+      {
+        $sort: {
+          'images.file_size': -1,
+        },
+      },
+      {
+        $limit: parseInt(count),
+      },
+    ],
+    (err, result) => {
+      if (err) {
+        sendError(res, err);
+        return;
+      }
+      if (!hasTimedOut(req) && !hasSentHeader(res)) res.json(result);
+    },
+  );
+};
 
 export const deployNewCamera = (req, res, cameraOptions) => {
   const camera = new Camera(cameraOptions);

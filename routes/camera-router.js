@@ -13,7 +13,6 @@ const cameraRouter = express.Router();
 cameraRouter
   .route('/')
   .get((req, res) => {
-    console.log(req.query.aggregate);
     const aggregate = get(req, 'query.aggregate');
     if (aggregate) {
       if (aggregate === 'image-count') {
@@ -54,10 +53,13 @@ cameraRouter.route('/:camera_id').get((req, res) => {
   getCameraById(req, res, id, pagesize, offset);
 });
 
-const extractPaginationQueryParams = query => {
+// I chose to make this return a default max page size and the first page if you don't specify both
+export const extractPaginationQueryParams = query => {
   const maxPageSize = 10000;
   const { pagesize, pagecount } = query;
 
+  // I wasn't sure if I should handle negatives here.
+  // I figure the consumer of this api is us and I don't need to guard against weird query params
   if (!pagesize || !pagecount) {
     return {
       pagesize: maxPageSize,
@@ -70,4 +72,5 @@ const extractPaginationQueryParams = query => {
     offset: pagecount * (pagesize || 0),
   };
 };
+
 export default cameraRouter;
