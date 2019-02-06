@@ -47,7 +47,7 @@ Query parameters of ?pagesize=#&pagecount=# will return camera with matching id'
 `example: GET https://camera-api.now.sh/camera/8?pagesize=100&pagecount=5`
 
 #### Aggregate
-###### data-usage
+###### most-data
 Query parameter of ?aggregate=data-usage will return a list of cameras with their data usage sorted by data usage decreasing
 Can also specify a count of how many images you want in that array. Top ten would be ?count=10. 
 `example: GET https://camera-api.now.sh/camera/9?aggregate=most-data&count=5`
